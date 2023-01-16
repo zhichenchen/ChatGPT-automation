@@ -1,0 +1,23 @@
+import pandas as pd
+import openai
+
+# Set the API key
+openai.api_key = ""
+
+def generate_answer(prompt):
+    completions = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=100, #editable
+        n=1,
+        stop=None, #editable
+        temperature=0.5,
+    )
+    message = completions.choices[0].text
+    return message.strip()
+
+# Read questions from Excel file
+df = pd.read_csv("questions.csv")
+df['answer'] = df['Text'].apply(generate_answer)
+df.to_csv('answers.csv', index=False)
+print("Answers exported to Answers.xlsx")
